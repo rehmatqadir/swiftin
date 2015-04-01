@@ -62,11 +62,77 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     
     if !locations.isEmpty && (CLLocationManager.locationServicesEnabled()) {
         currentLocation = locations[locations.count-1] as CLLocation
-        locationLabel.text = "(currentLocation)"
+        var locationAsString = "\(currentLocation.coordinate.latitude)" + " " + "\(currentLocation.coordinate.longitude)"
+        
     }
     
 
     
+    }
+    
+    
+    func updateCurrentDistanceRemaining(){
+        
+        var currentLatitudeRadians = DegreesToRadians(currentLocation.coordinate.latitude)
+        var currentLongitudeRadians = DegreesToRadians(currentLocation.coordinate.longitude)
+        
+        var destinationLatitudeRadians = DegreesToRadians(destinationLocation.coordinate.latitude)
+        var destinationLongitudeRadians = DegreesToRadians(destinationLocation.coordinate.longitude)
+        
+        var latitudeDelta = Double (destinationLatitudeRadians - currentLatitudeRadians)
+        
+        var longitudeDelta = Double(destinationLongitudeRadians - currentLongitudeRadians)
+        
+    
+        
+    
+//        ourPhoneFloatLat = startLocation.coordinate.latitude;
+//        ourPhoneFloatLong = startLocation.coordinate.longitude;
+//        self.strLatitude = [NSString stringWithFormat: @"%f", startLocation.coordinate.latitude];
+//        self.strLongitude = [NSString stringWithFormat: @"%f", startLocation.coordinate.longitude];
+//        
+//        
+//        // thisDistVenueLat = [appDelegate.closestVenue.venueLatitude floatValue];
+//        // thisDistVenueLong = [appDelegate.closestVenue.venueLongitude floatValue];
+//        
+//        self.currentVenue = appDelegate.fullySortedArray[appDelegate.shakeIndex];
+//        
+//        thisDistVenueLat = [self.currentVenue.venueLatitude floatValue];
+//        thisDistVenueLong = [self.currentVenue.venueLongitude floatValue];
+//        
+//        //  give latitude2,lang of destination   and latitude,longitude of first place.
+//        
+//        //this function returns distance in kilometer, the spherical law of cosines.
+//        
+//        float DistRadCurrentLat = degreesToRadians(startLocation.coordinate.latitude);
+//        float DistRadCurrentLong = degreesToRadians(startLocation.coordinate.longitude);
+//        float DistRadthisVenueLat = degreesToRadians(thisDistVenueLat);
+//        float DistRadthisVenueLong = degreesToRadians(thisDistVenueLong);
+//        //float deltLat = (radthisVenueLat - radcurrentLat);
+//        float deltDistLat = (DistRadthisVenueLat - DistRadCurrentLat);
+//        float deltDistLong = (DistRadthisVenueLong - DistRadCurrentLong);
+//        
+//        float a = (sinf(deltDistLat/2) * sinf(deltDistLat/2)) + ((sinf(deltDistLong/2) * sinf(deltDistLong/2)) * cosf(DistRadCurrentLat) * cosf(DistRadthisVenueLat));
+//        float srootA = sqrtf(a);
+//        float srootoneMinusA = sqrtf((1-a));
+//        
+//        float c = (2 * atan2f(srootA, srootoneMinusA));
+//        
+//        float distBetweenStartandVenueMeters = (c * 6371*1000); //radius of earth
+//        
+//        float distBetweenStartandVenueFeet = (distBetweenStartandVenueMeters*3.281);
+//        
+//        self.theDistance = [[NSString alloc] init];
+        
+
+    }
+    
+    func DegreesToRadians (value:Double) -> Double {
+        return value * M_PI / 180.0
+    }
+    
+    func RadiansToDegrees (value:Double) -> Double {
+        return value * 180.0 / M_PI
     }
 
     override func didReceiveMemoryWarning() {
