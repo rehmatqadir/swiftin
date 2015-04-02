@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import MapKit
+import Darwin
 
 class ViewController: UIViewController, CLLocationManagerDelegate{
 
@@ -38,7 +39,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         arrowView.image = UIImage (named: "Love-heart-arrow.png")
         self.view.addSubview(arrowView)
         locationLabel.frame = CGRectMake(100, arrowView.frame.origin.y + arrowView.frame.size.height + 50, self.view.frame.size.width - 200, 30)
-        locationLabel.font = UIFont (name: "Arial", size: 18)
+        locationLabel.font = UIFont (name: "Arial", size: 12)
         locationLabel.textAlignment = NSTextAlignment.Center
         locationLabel.text = "location goes here"
         self.view.addSubview(locationLabel)
@@ -63,10 +64,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     if !locations.isEmpty && (CLLocationManager.locationServicesEnabled()) {
         currentLocation = locations[locations.count-1] as CLLocation
         var locationAsString = "\(currentLocation.coordinate.latitude)" + " " + "\(currentLocation.coordinate.longitude)"
+        locationLabel.text = locationAsString
         
     }
-    
-
     
     }
     
@@ -79,13 +79,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         var destinationLatitudeRadians = DegreesToRadians(destinationLocation.coordinate.latitude)
         var destinationLongitudeRadians = DegreesToRadians(destinationLocation.coordinate.longitude)
         
-        var latitudeDelta = Double (destinationLatitudeRadians - currentLatitudeRadians)
+        var latitudeDelta = Float (destinationLatitudeRadians - currentLatitudeRadians)
         
-        var longitudeDelta = Double(destinationLongitudeRadians - currentLongitudeRadians)
+        var longitudeDelta = Float (destinationLongitudeRadians - currentLongitudeRadians)
         
-    
+        var a =  sinf(latitudeDelta/2) * sinf(latitudeDelta/2) + sinf(longitudeDelta/2) * sinf(longitudeDelta/2)
         
-    
+        var c = 2 * (atan2f((sqrt(a)), sqrtf(1-a)))
+        
+        var remainingDistanceMeters = c * 6371 * 1000
+        var remainingDistanceFeet = remainingDistanceMeters * 3.281
+        
 //        ourPhoneFloatLat = startLocation.coordinate.latitude;
 //        ourPhoneFloatLong = startLocation.coordinate.longitude;
 //        self.strLatitude = [NSString stringWithFormat: @"%f", startLocation.coordinate.latitude];
