@@ -18,6 +18,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     let locationManager:CLLocationManager
     var currentLocation:CLLocation
     var destinationLocation:CLLocation
+    var currentLocationAsString:String
     var currentHeading:CLHeading
     var collectedVenues:NSMutableArray
     
@@ -27,6 +28,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         locationManager = CLLocationManager()
         currentLocation = CLLocation()
         destinationLocation = CLLocation()
+        currentLocationAsString = String()
         currentHeading = CLHeading()
         collectedVenues = NSMutableArray()
         super.init(coder: aDecoder)
@@ -49,9 +51,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
         self.startLocationListener()
-
-        // Do any additional setup after loading the view, typically from a nib.
     }
+    
+    
     
     func startLocationListener(){
         locationManager.startUpdatingHeading()
@@ -66,8 +68,44 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         var locationAsString = "\(currentLocation.coordinate.latitude)" + " " + "\(currentLocation.coordinate.longitude)"
         locationLabel.text = locationAsString
         
+        if (collectedVenues.count == 0) {
+            self.queryForVenues(currentLocation)
+        }
     }
     
+    }
+    
+    func queryForVenues(CLLocation){
+        
+        let todaysDate = NSDate()
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+    
+        let dateString = String(dateFormatter.stringFromDate(todaysDate))
+        
+        var urlString = String("https://api.foursquare.com/v2/venues/search?ll=%@&query=sushi&oauth_token=R0LICVP1OPDRVUGDTBAY4YQDCCRZKQ20BLR4SNG5XVKZ5T5M&v=" + "\(currentLocationAsString)" + "\(dateString)")
+        
+//        NSDate *dateTemp = [[NSDate alloc] init];
+//        NSDateFormatter *dateFormat1 = [[NSDateFormatter alloc] init];
+//        [dateFormat1 setDateFormat:@"yyyyMMdd"];
+//        
+//        NSString *tempDateString = [[NSString alloc] init];
+//        tempDateString = [dateFormat1 stringFromDate:dateTemp];
+//        
+//        //searches 4S for nearby sushi restaurants based on the current location
+//        NSString *urlString = [NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?ll=%@&query=sushi&oauth_token=R0LICVP1OPDRVUGDTBAY4YQDCCRZKQ20BLR4SNG5XVKZ5T5M&v=%@", currentUserCoordForURL, tempDateString];
+//        NSLog(@"The search URL is%@", urlString);
+//        
+//        
+//        
+//        //searches 4S for nearby restaurants based on the current location
+//        //  NSString *urlString = [NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?ll=%@&query=restaurants&oauth_token=R0LICVP1OPDRVUGDTBAY4YQDCCRZKQ20BLR4SNG5XVKZ5T5M", currentUserCoordForURL];
+//        NSLog(@"The search URL is%@", urlString);
+//        NSURL *url = [NSURL URLWithString: urlString];
+//        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+//        [NSURLConnection sendAsynchronousRequest:urlRequest queue: [NSOperationQueue mainQueue]
+//        completionHandler:^(NSURLResponse *urlResponse, NSData *data, NSError *error)
+        
     }
     
     
