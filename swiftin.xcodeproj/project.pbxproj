@@ -13,7 +13,6 @@
 		5FD7E1EC1ACB35C0006475E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FD7E1EB1ACB35C0006475E6 /* Images.xcassets */; };
 		5FD7E1EF1ACB35C0006475E6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FD7E1ED1ACB35C0006475E6 /* LaunchScreen.xib */; };
 		5FD7E1FB1ACB35C0006475E6 /* swiftinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD7E1FA1ACB35C0006475E6 /* swiftinTests.swift */; };
-		5FD7E2051ACB3A30006475E6 /* Love-heart-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD7E2041ACB3A30006475E6 /* Love-heart-arrow.png */; };
 		5FD7E2071ACB568F006475E6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD7E2061ACB568F006475E6 /* MapKit.framework */; };
 		5FD7E2091ACB56B0006475E6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD7E2081ACB56B0006475E6 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
@@ -39,7 +38,6 @@
 		5FD7E1F41ACB35C0006475E6 /* swiftinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = swiftinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD7E1F91ACB35C0006475E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5FD7E1FA1ACB35C0006475E6 /* swiftinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftinTests.swift; sourceTree = "<group>"; };
-		5FD7E2041ACB3A30006475E6 /* Love-heart-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Love-heart-arrow.png"; path = "../../lunchspin-3/lunchspin/Love-heart-arrow.png"; sourceTree = "<group>"; };
 		5FD7E2061ACB568F006475E6 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5FD7E2081ACB56B0006475E6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -89,7 +87,6 @@
 			children = (
 				5FD7E1E41ACB35C0006475E6 /* AppDelegate.swift */,
 				5FD7E1E61ACB35C0006475E6 /* ViewController.swift */,
-				5FD7E2041ACB3A30006475E6 /* Love-heart-arrow.png */,
 				5FD7E1E81ACB35C0006475E6 /* Main.storyboard */,
 				5FD7E1EB1ACB35C0006475E6 /* Images.xcassets */,
 				5FD7E1ED1ACB35C0006475E6 /* LaunchScreen.xib */,
@@ -213,7 +210,6 @@
 			files = (
 				5FD7E1EA1ACB35C0006475E6 /* Main.storyboard in Resources */,
 				5FD7E1EF1ACB35C0006475E6 /* LaunchScreen.xib in Resources */,
-				5FD7E2051ACB3A30006475E6 /* Love-heart-arrow.png in Resources */,
 				5FD7E1EC1ACB35C0006475E6 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,6 +423,7 @@
 				5FD7E2001ACB35C0006475E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5FD7E2011ACB35C0006475E6 /* Build configuration list for PBXNativeTarget "swiftinTests" */ = {
 			isa = XCConfigurationList;
@@ -435,6 +432,7 @@
 				5FD7E2031ACB35C0006475E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
