@@ -11,6 +11,11 @@ import CoreLocation
 import MapKit
 import Darwin
 
+//Client ID
+// CBI40DM3EQLVBDGDIXTAXCY44DIB1VRD1T1A5HHXNSFTCVIC
+// Client Secret
+// L1GT3YIVMPEIIIXP5NALNSSZQJZWOFAYYZ0YOEMDFYT35COT
+
 class ViewController: UIViewController, CLLocationManagerDelegate{
 
     let arrowView:UIImageView
@@ -65,15 +70,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     
     if !locations.isEmpty && (CLLocationManager.locationServicesEnabled()) {
         currentLocation = locations[locations.count-1] as CLLocation
-        var locationAsString = "\(currentLocation.coordinate.latitude)" + " " + "\(currentLocation.coordinate.longitude)"
+        var locationAsString = "\(currentLocation.coordinate.latitude),"+"\(currentLocation.coordinate.longitude)"
         locationLabel.text = locationAsString
+        currentLocationAsString = locationAsString
         
         if (collectedVenues.count == 0) {
             self.queryForVenues(currentLocation)
+            return;
         }
     }
     
     }
+    
     
     func queryForVenues(CLLocation){
         
@@ -83,28 +91,35 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     
         let dateString = String(dateFormatter.stringFromDate(todaysDate))
         
-        var urlString = String("https://api.foursquare.com/v2/venues/search?ll=%@&query=sushi&oauth_token=R0LICVP1OPDRVUGDTBAY4YQDCCRZKQ20BLR4SNG5XVKZ5T5M&v=" + "\(currentLocationAsString)" + "\(dateString)")
+        var urlString = String("https://api.foursquare.com/v2/venues/search?ll="+"\(currentLocationAsString)&client_id=CBI40DM3EQLVBDGDIXTAXCY44DIB1VRD1T1A5HHXNSFTCVIC&client_secret=L1GT3YIVMPEIIIXP5NALNSSZQJZWOFAYYZ0YOEMDFYT35COT"+"&query=sushi&v="+"\(dateString)")
         
-//        NSDate *dateTemp = [[NSDate alloc] init];
-//        NSDateFormatter *dateFormat1 = [[NSDateFormatter alloc] init];
-//        [dateFormat1 setDateFormat:@"yyyyMMdd"];
-//        
-//        NSString *tempDateString = [[NSString alloc] init];
-//        tempDateString = [dateFormat1 stringFromDate:dateTemp];
-//        
-//        //searches 4S for nearby sushi restaurants based on the current location
-//        NSString *urlString = [NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?ll=%@&query=sushi&oauth_token=R0LICVP1OPDRVUGDTBAY4YQDCCRZKQ20BLR4SNG5XVKZ5T5M&v=%@", currentUserCoordForURL, tempDateString];
-//        NSLog(@"The search URL is%@", urlString);
-//        
-//        
-//        
-//        //searches 4S for nearby restaurants based on the current location
-//        //  NSString *urlString = [NSString stringWithFormat:@"https://api.foursquare.com/v2/venues/search?ll=%@&query=restaurants&oauth_token=R0LICVP1OPDRVUGDTBAY4YQDCCRZKQ20BLR4SNG5XVKZ5T5M", currentUserCoordForURL];
-//        NSLog(@"The search URL is%@", urlString);
-//        NSURL *url = [NSURL URLWithString: urlString];
-//        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-//        [NSURLConnection sendAsynchronousRequest:urlRequest queue: [NSOperationQueue mainQueue]
-//        completionHandler:^(NSURLResponse *urlResponse, NSData *data, NSError *error)
+       // https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD
+        
+        let url = NSURL(string: urlString)?
+        
+        var urlRequest:NSURLRequest! = NSURLRequest(URL: url!)
+        
+        NSURLConnection.sendAsynchronousRequest(urlRequest!, queue: NSOperationQueue.currentQueue()) { (response:NSURLResponse!, data:NSData!, error:NSError!) -> Void in
+            
+            println("\(response)")
+           // [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+            let outerDictionary:AnyObject! = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)
+            var responseDictionary = outerDictionary["response"] as NSDictionary!
+            var venuesArray = responseDictionary.objectForKey("venues") as [AnyObject]
+            
+            
+            for  dest in venuesArray{
+                var destinationVenue = DestinationVenue()
+                destinationVenue.destinationName = dest["name"] as String!
+                destinationVenue.latitudeString = ((dest["location"] as NSDictionary!)["lat"] as NSNumber!).stringValue
+                destinationVenue.longitudeString = ((dest["location"] as NSDictionary!)["lng"] as NSNumber!).stringValue
+                destinationVenue.streetAddress = (dest["location"] as NSDictionary!)["address"] as String!
+                println("latitude is \(destinationVenue.latitudeString)")
+                self.collectedVenues.addObject(destinationVenue)
+                
+            }
+            
+          }
         
     }
     
