@@ -88,12 +88,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         let todaysDate = NSDate()
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
-    
+        
         let dateString = String(dateFormatter.stringFromDate(todaysDate))
         
         var urlString = String("https://api.foursquare.com/v2/venues/search?ll="+"\(currentLocationAsString)&client_id=CBI40DM3EQLVBDGDIXTAXCY44DIB1VRD1T1A5HHXNSFTCVIC&client_secret=L1GT3YIVMPEIIIXP5NALNSSZQJZWOFAYYZ0YOEMDFYT35COT"+"&query=sushi&v="+"\(dateString)")
         
-       // https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD
+        // https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD
         
         let url = NSURL(string: urlString)?
         
@@ -101,25 +101,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         
         NSURLConnection.sendAsynchronousRequest(urlRequest!, queue: NSOperationQueue.currentQueue()) { (response:NSURLResponse!, data:NSData!, error:NSError!) -> Void in
             
-            println("\(response)")
-           // [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-            let outerDictionary:AnyObject! = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)
-            var responseDictionary = outerDictionary["response"] as NSDictionary!
-            var venuesArray = responseDictionary.objectForKey("venues") as [AnyObject]
+            
+            let outerDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil) as [String: AnyObject]
+            var responseDictionary = outerDictionary["response"] as [String: AnyObject]
+            var venuesArray = responseDictionary["venues"] as [AnyObject]
+            println("\(venuesArray)")
             
             
-            for  dest in venuesArray{
+            for  dest:AnyObject in venuesArray{
                 var destinationVenue = DestinationVenue()
-                destinationVenue.destinationName = dest["name"] as String!
-                destinationVenue.latitudeString = ((dest["location"] as NSDictionary!)["lat"] as NSNumber!).stringValue
-                destinationVenue.longitudeString = ((dest["location"] as NSDictionary!)["lng"] as NSNumber!).stringValue
-                destinationVenue.streetAddress = (dest["location"] as NSDictionary!)["address"] as String!
-                println("latitude is \(destinationVenue.latitudeString)")
+                if  (dest["name"]? != nil){
+                    destinationVenue.destinationName = dest["name"] as? String
+                }
+                
+                if  (dest["location"]? != nil) {
+                    destinationVenue.latitudeString = ((dest["location"] as [String: AnyObject]!)["lat"] as Double!).description
+                    destinationVenue.longitudeString = ((dest["location"] as [String: AnyObject]!)["lng"] as Double!).description
+                    println("\(destinationVenue.longitudeString)")
+                    destinationVenue.streetAddress = (dest["location"] as [String: AnyObject]!)["address"] as String!
+                }
+                
+                
                 self.collectedVenues.addObject(destinationVenue)
                 
             }
             
-          }
+        }
         
     }
     

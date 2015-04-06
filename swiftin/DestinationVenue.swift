@@ -11,11 +11,11 @@ import CoreLocation
 
 class DestinationVenue: NSObject {
     
-    var destinationName: String
+    var destinationName: String?
     var coordinates: CLLocation
     var latitudeString: String
     var longitudeString: String
-    var streetAddress: String
+    var streetAddress: String?
    
     
     override init(){
