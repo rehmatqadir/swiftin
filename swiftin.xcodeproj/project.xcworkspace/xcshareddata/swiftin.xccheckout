@@ -12,6 +12,8 @@
 	<dict>
 		<key>C454A8C8F73D61D563796906FB9E9750C6656F71</key>
 		<string>https://github.com/rehmatqadir/swiftin.git</string>
+		<key>F509000AE7A7123C38F7F98ECD81BDB86AA85107</key>
+		<string>https://github.com/rehmatqadir/Orphan.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>swiftin.xcodeproj</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>C454A8C8F73D61D563796906FB9E9750C6656F71</key>
 		<string>../..</string>
+		<key>F509000AE7A7123C38F7F98ECD81BDB86AA85107</key>
+		<string>../../../Orphan</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/rehmatqadir/swiftin.git</string>
@@ -28,6 +32,14 @@
 	<string>C454A8C8F73D61D563796906FB9E9750C6656F71</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F509000AE7A7123C38F7F98ECD81BDB86AA85107</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Orphan</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

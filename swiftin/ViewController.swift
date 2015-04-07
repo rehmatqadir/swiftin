@@ -20,21 +20,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
 
     let arrowView:UIImageView
     let locationLabel:UILabel
+    let destinationNameLabel:UILabel
     let locationManager:CLLocationManager
     var currentLocation:CLLocation
-    var destinationLocation:CLLocation
+    var destinationLocation:CLLocationCoordinate2D?
     var currentLocationAsString:String
     var currentHeading:CLHeading
+    var destinationVenue:DestinationVenue
     var collectedVenues:NSMutableArray
     
     required init(coder aDecoder: NSCoder) {
         arrowView = UIImageView()
         locationLabel = UILabel()
+        destinationNameLabel = UILabel()
         locationManager = CLLocationManager()
         currentLocation = CLLocation()
-        destinationLocation = CLLocation()
         currentLocationAsString = String()
         currentHeading = CLHeading()
+        destinationVenue = DestinationVenue()
         collectedVenues = NSMutableArray()
         super.init(coder: aDecoder)
     }
@@ -42,16 +45,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        arrowView.frame = CGRectMake(0, self.view.frame.size.height/2-150, 400, 300)
-        arrowView.image = UIImage (named: "Love-heart-arrow.png")
-        self.view.addSubview(arrowView)
-        locationLabel.frame = CGRectMake(100, arrowView.frame.origin.y + arrowView.frame.size.height + 50, self.view.frame.size.width - 200, 30)
-        locationLabel.font = UIFont (name: "Arial", size: 12)
+        arrowView.frame = CGRectMake(20, 50, 390, 455)
+        arrowView.contentMode = UIViewContentMode(rawValue: 2)!
+        arrowView.image = UIImage (named: "rotated-heart-arrow.png")
+        view.addSubview(arrowView)
+        destinationNameLabel.frame = CGRectMake(100, arrowView.frame.origin.y + arrowView.frame.size.height, self.view.frame.size.width - 200, 30)
+        self.view.addSubview(destinationNameLabel)
+        locationLabel.font = UIFont (name: "Avenir-Heavy", size: 26)
+        locationLabel.frame = CGRectMake(100, arrowView.frame.origin.y + arrowView.frame.size.height + 50, self.view.frame.size.width - 150, 30)
+        locationLabel.font = UIFont (name: "Avenir-Heavy", size: 20)
         locationLabel.textAlignment = NSTextAlignment.Center
         locationLabel.text = "location goes here"
         self.view.addSubview(locationLabel)
-        let location = CLLocationCoordinate2D(latitude: 37, longitude: -122)
-        let coordinateSpan = MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
@@ -78,6 +83,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
             self.queryForVenues(currentLocation)
             return;
         }
+        
+        else {
+             self.updateCurrentDistanceRemaining()
+        }
+       
     }
     
     }
@@ -92,8 +102,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         let dateString = String(dateFormatter.stringFromDate(todaysDate))
         
         var urlString = String("https://api.foursquare.com/v2/venues/search?ll="+"\(currentLocationAsString)&client_id=CBI40DM3EQLVBDGDIXTAXCY44DIB1VRD1T1A5HHXNSFTCVIC&client_secret=L1GT3YIVMPEIIIXP5NALNSSZQJZWOFAYYZ0YOEMDFYT35COT"+"&query=sushi&v="+"\(dateString)")
-        
-        // https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD
         
         let url = NSURL(string: urlString)?
         
@@ -121,23 +129,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
                     destinationVenue.streetAddress = (dest["location"] as [String: AnyObject]!)["address"] as String!
                 }
                 
-                
                 self.collectedVenues.addObject(destinationVenue)
                 
             }
             
+             self.updateCurrentDistanceRemaining()
+            
         }
-        
     }
     
     
     func updateCurrentDistanceRemaining(){
         
+        destinationVenue = self.collectedVenues.objectAtIndex(0) as DestinationVenue
+        destinationLocation = CLLocationCoordinate2DMake((strtod(destinationVenue.latitudeString, nil)), (strtod(destinationVenue.longitudeString, nil)))
+        destinationNameLabel.text = destinationVenue.destinationName as String!
+        
         var currentLatitudeRadians = DegreesToRadians(currentLocation.coordinate.latitude)
         var currentLongitudeRadians = DegreesToRadians(currentLocation.coordinate.longitude)
         
-        var destinationLatitudeRadians = DegreesToRadians(destinationLocation.coordinate.latitude)
-        var destinationLongitudeRadians = DegreesToRadians(destinationLocation.coordinate.longitude)
+        var destinationLatitudeRadians = DegreesToRadians(destinationLocation!.latitude)
+        var destinationLongitudeRadians = DegreesToRadians(destinationLocation!.longitude)
         
         var latitudeDelta = Float (destinationLatitudeRadians - currentLatitudeRadians)
         
@@ -150,45 +162,56 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         var remainingDistanceMeters = c * 6371 * 1000
         var remainingDistanceFeet = remainingDistanceMeters * 3.281
         
-//        ourPhoneFloatLat = startLocation.coordinate.latitude;
-//        ourPhoneFloatLong = startLocation.coordinate.longitude;
-//        self.strLatitude = [NSString stringWithFormat: @"%f", startLocation.coordinate.latitude];
-//        self.strLongitude = [NSString stringWithFormat: @"%f", startLocation.coordinate.longitude];
-//        
-//        
-//        // thisDistVenueLat = [appDelegate.closestVenue.venueLatitude floatValue];
-//        // thisDistVenueLong = [appDelegate.closestVenue.venueLongitude floatValue];
-//        
-//        self.currentVenue = appDelegate.fullySortedArray[appDelegate.shakeIndex];
-//        
-//        thisDistVenueLat = [self.currentVenue.venueLatitude floatValue];
-//        thisDistVenueLong = [self.currentVenue.venueLongitude floatValue];
-//        
-//        //  give latitude2,lang of destination   and latitude,longitude of first place.
-//        
-//        //this function returns distance in kilometer, the spherical law of cosines.
-//        
-//        float DistRadCurrentLat = degreesToRadians(startLocation.coordinate.latitude);
-//        float DistRadCurrentLong = degreesToRadians(startLocation.coordinate.longitude);
-//        float DistRadthisVenueLat = degreesToRadians(thisDistVenueLat);
-//        float DistRadthisVenueLong = degreesToRadians(thisDistVenueLong);
-//        //float deltLat = (radthisVenueLat - radcurrentLat);
-//        float deltDistLat = (DistRadthisVenueLat - DistRadCurrentLat);
-//        float deltDistLong = (DistRadthisVenueLong - DistRadCurrentLong);
-//        
-//        float a = (sinf(deltDistLat/2) * sinf(deltDistLat/2)) + ((sinf(deltDistLong/2) * sinf(deltDistLong/2)) * cosf(DistRadCurrentLat) * cosf(DistRadthisVenueLat));
-//        float srootA = sqrtf(a);
-//        float srootoneMinusA = sqrtf((1-a));
-//        
-//        float c = (2 * atan2f(srootA, srootoneMinusA));
-//        
-//        float distBetweenStartandVenueMeters = (c * 6371*1000); //radius of earth
-//        
-//        float distBetweenStartandVenueFeet = (distBetweenStartandVenueMeters*3.281);
+        locationLabel.text = "\(remainingDistanceFeet.description) feet remaining"
+        
 //        
 //        self.theDistance = [[NSString alloc] init];
         
 
+    }
+    
+    
+    func  locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!) {
+        
+        if (collectedVenues.count > 0) {
+        
+        var currentLatitudeRadians = DegreesToRadians(currentLocation.coordinate.latitude)
+        var currentLongitudeRadians = DegreesToRadians(currentLocation.coordinate.longitude)
+        var destinationLatitudeRadians = DegreesToRadians(destinationLocation!.latitude)
+        var destinationLongitudeRadians = DegreesToRadians(destinationLocation!.longitude)
+        
+        var latitudeDelta = Float (destinationLatitudeRadians - currentLatitudeRadians)
+        
+        var longitudeDelta = Float (destinationLongitudeRadians - currentLongitudeRadians)
+        
+        var y = sinf(Float (longitudeDelta)) * cosf(Float (destinationLatitudeRadians))
+        var x = cosf(Float (currentLatitudeRadians)) * sinf(Float (destinationLatitudeRadians)) - (sinf(Float (currentLatitudeRadians)) * cosf(Float (destinationLatitudeRadians))  * cosf(Float (longitudeDelta)))
+        var rotationAngleRadians = Double (atan2f(y, x))
+        var initialBearingToDestination = rotationAngleRadians
+        var initialBearingDegrees = RadiansToDegrees(initialBearingToDestination)
+        
+        if  initialBearingDegrees < 0 {
+            initialBearingDegrees = initialBearingDegrees + 360
+        }
+        
+        var angleToRotate = Double()
+        
+        if newHeading.trueHeading > initialBearingDegrees {
+            
+            angleToRotate = -(newHeading.trueHeading - initialBearingDegrees)
+        }
+        
+        else {
+            angleToRotate = initialBearingDegrees - newHeading.trueHeading
+        }
+        
+        var angleToRotateRadians = angleToRotate * M_PI / 180.0
+        
+        UIView.animateWithDuration(0.8, animations: {
+            self.arrowView.transform = CGAffineTransformMakeRotation(CGFloat (angleToRotateRadians))
+        })
+        
+        }
     }
     
     func DegreesToRadians (value:Double) -> Double {
